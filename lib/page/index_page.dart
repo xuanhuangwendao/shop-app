@@ -1,5 +1,4 @@
 import 'package:shopapp/page/cart_page.dart';
-import 'package:shopapp/page/category_page.dart';
 import 'package:shopapp/page/home_page.dart';
 import 'package:shopapp/page/user_page.dart';
 import 'package:shopapp/provider/provider.dart';
@@ -27,10 +26,6 @@ class _IndexPageState extends State<IndexPage> {
                 label: "首页",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.category),
-                label: "分类",
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_cart),
                 label: "购物车",
               ),
@@ -51,7 +46,6 @@ class _IndexPageState extends State<IndexPage> {
                   index: mProvider.bottomNaviIndex,
                   children: const [
                     HomePage(),
-                    CategoryPage(),
                     CartPage(),
                     UserPage(),
                   ],

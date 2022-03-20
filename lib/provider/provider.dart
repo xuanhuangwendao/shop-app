@@ -1,9 +1,9 @@
 
 import 'package:shopapp/config/api.dart';
 import 'package:shopapp/model/category_content_model.dart';
-import 'package:shopapp/model/home_page_model.dart';
 import 'package:shopapp/model/product_detail_model.dart';
 import 'package:shopapp/model/product_info_model.dart';
+import 'package:shopapp/model/recommend_response.dart';
 import 'package:shopapp/net/net_request.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class BottomNaviProvider extends ChangeNotifier {
 
 class HomePageProvider extends ChangeNotifier {
 
-  HomePageModel? model;
+  RecommendResponse? data;
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
@@ -29,15 +29,14 @@ class HomePageProvider extends ChangeNotifier {
     isLoading = true;
     isError = false;
     errorMsg = "";
-    NetRequest().requestData(MyApi.HOME_PAGE).then((response) {
+    NetRequest().request(MyApi.RECOMMEND).then((response) {
       isLoading = false;
-      if (response.code == 200) {
-        model = HomePageModel.fromJson(response.data);
-      }
+      data =  RecommendResponse.fromJson(response);
       notifyListeners();
     }).catchError((error) {
       isError = true;
-      errorMsg = error;
+      print(error);
+      errorMsg = error.toString();
       isLoading = false;
       notifyListeners();
     });

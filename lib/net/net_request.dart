@@ -32,4 +32,19 @@ class NetRequest {
       return Future.error(e.type.name + ":"  + e.message);
     }
   }
+
+  Future<dynamic> request<T>(String path,
+      {Map<String, dynamic>? params,
+        dynamic data,
+        String method = "get"}) async {
+    try {
+      final response = method == "get"
+          ? await dio.get(path, queryParameters: params)
+          : await dio.post(path, data: data);
+      return response.data;
+    } on DioError catch(e) {
+      print(e.message);
+      return Future.error(e.type.name + ":"  + e.message);
+    }
+  }
 }
