@@ -1,4 +1,4 @@
-import 'package:shopapp/model/home_page_model.dart';
+import 'package:shopapp/model/recommend_response.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: Scaffold(
           appBar: AppBar(
-            title: const Text("首页"),
+            title: const Text("推荐"),
           ),
           body: Container(
             color: const Color(0xfff4f4f4),
@@ -39,7 +39,6 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(provider.errorMsg!),
                         OutlineButton(
                           onPressed: () {
                             provider.loadHomePageData();
@@ -50,22 +49,39 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 }
-                HomePageModel model = provider.model!;
-                return ListView(
-                  children: [
-                    // 轮播图
-                    buildAspectRatio(model),
-                    // 分类
-                    buildLogos(model),
-                    // 掌上秒杀
-                    buildMSHeaderContainer(),
-                    // 秒杀商品
-                    buildMSBodyContainer(model),
-                    // 广告
-                    buildAds(model.pageRow!.ad1),
+                List<ItemList> itemList = provider.data!.model!.itemList!;
+                double listSize = itemList.length / 2;
+                int size = listSize.ceil();
+                print(size);
 
-                    buildAds(model.pageRow!.ad2),
-                  ],
+                return ListView.builder(
+                    itemCount: size,
+                    itemBuilder: (context, index) {
+                      ItemList item1 = itemList[index * 2];
+                      if (2 * index + 1 < itemList.length) {
+                        ItemList item2 = itemList[index * 2 + 1];
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(child: buildItem(item1)),
+
+                            Expanded(child: buildItem(item2)),
+                          ],
+                        );
+                      } else {
+                        return Row(
+                          children: [
+                            Expanded(child: buildItem(item1)),
+
+                            Expanded(child: SizedBox())
+                          ],
+                        );
+                      }
+                    });
+
+                return ListView(
+                  children: [Text(itemList[0].title!)],
                 );
               },
             ),
@@ -73,102 +89,79 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container buildMSBodyContainer(HomePageModel model) {
+  Container buildItem(ItemList item) {
+
     return Container(
-        height: 120,
-        color: Colors.white,
-        child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: model.quicks!.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets${model.quicks![index].image}",
-                      width: 85,
-                      height: 85,
-                    ),
-                    Text(
-                      "${model.quicks![index].price}",
-                      style: TextStyle(color: Colors.red, fontSize: 16),
-                    )
-                  ],
-                ),
-              );
-            }));
-  }
-
-  Container buildMSHeaderContainer() {
-    return Container(
-      margin: const EdgeInsets.only(top: 10.0),
-      padding: const EdgeInsets.all(10.0),
-      height: 50,
-      color: Colors.white,
-      child: Row(
-        children: [
-          Image.asset("assets/image/bej.png", width: 90, height: 20),
-          const Spacer(),
-          const Text("更多秒杀"),
-          const Icon(
-            CupertinoIcons.right_chevron,
-            size: 14,
-          )
-        ],
-      ),
-    );
-  }
-
-  AspectRatio buildAspectRatio(HomePageModel model) {
-    return AspectRatio(
-      aspectRatio: 72 / 35,
-      child: Swiper(
-        itemCount: 5,
-        pagination: const SwiperPagination(),
-        autoplay: true,
-        itemBuilder: (BuildContext context, int index) {
-          return Image.asset("assets${model.swipers![index].image}");
-        },
-      ),
-    );
-  }
-
-  Widget buildLogos(HomePageModel model) {
-    List<Widget> list = [];
-    for (var i = 0; i < model.logos!.length; i++) {
-      list.add(Container(
-        width: 60.0,
-        child: Column(
-          children: [
-            Image.asset("assets${model.logos![i].image}",
-                width: 50, height: 50),
-            Text("${model.logos![i].title}")
-          ],
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          border: Border.all(width: 1, color: Colors.black),
         ),
-      ));
-    }
-    return Container(
-      color: Colors.white,
-      height: 170,
-      padding: const EdgeInsets.all(10.0),
-      child: Wrap(
-          spacing: 7.0,
-          runSpacing: 10.0,
-          alignment: WrapAlignment.spaceBetween,
-          children: list),
+      child: InkWell(
+        child: Column(children: [
+          Image.network(
+            item.picUrl!,
+            height: 150,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(
+                item.title!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Text(
+                "￥${item.price}",
+                style: const TextStyle(fontSize: 18.0, color: Color(0xFFe93b3d)),
+              ),
+              Text(
+                "库存: ${item.stock}",
+                style: const TextStyle(
+                    fontSize: 13.0, color: Color(0xFF999999)),
+              ),
+
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+
+              Text(
+                "团长: ${item.sellerNick}",
+                style: const TextStyle(
+                    fontSize: 13.0, color: Color(0xFF999999)),
+              ),
+
+              Text(
+                " ${item.gmtCreate?.split("T")[0]}",
+                style: const TextStyle(
+                    fontSize: 13.0, color: Color(0xFF999999)),
+              ),
+
+            ],
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+        ]),
+        onTap: () {
+          print("click item: " + item.title!);
+        },
+      )
     );
   }
 
-  Widget buildAds(List<String>? ads) {
-    List<Widget> list = [];
-    for (var value in ads!) {
-      list.add(Expanded(
-        child: Image.asset("assets$value"),
-      ));
-    }
-    return Row(
-      children: list,
-    );
-  }
 }

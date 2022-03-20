@@ -45,36 +45,40 @@ class _ProductListPageState extends State<ProductListPage> {
                 ),
               );
             }
-            return ListView.builder(
-                itemCount: provider.list.length,
-                itemBuilder: (context, index) {
-                  ProductInfoModel model = provider.list[index];
-
-                  return InkWell(
-                    child: buildProductItem(model),
-                    onTap: (){
-                      //跳转商品页面
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              ChangeNotifierProvider<ProductDetailProvider>(
-                                create: (context) {
-                                  ProductDetailProvider provider = ProductDetailProvider();
-                                  provider.loadProduct(model.id!);
-                                  return provider;
-                                },
-                                child: Consumer<ProductDetailProvider>(
-                                    builder: (_, provider, __) {
-                                      return Container(
-                                          child: ProductDetailPage( id: model.id!));
-                                    }),
-                              )));
-                    },
-                  );
-                });
+            return buildItemList(provider);
           },
         ),
       ),
     );
+  }
+
+  ListView buildItemList(ProductListProvider provider) {
+    return ListView.builder(
+              itemCount: provider.list.length,
+              itemBuilder: (context, index) {
+                ProductInfoModel model = provider.list[index];
+
+                return InkWell(
+                  child: buildProductItem(model),
+                  onTap: (){
+                    //跳转商品页面
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            ChangeNotifierProvider<ProductDetailProvider>(
+                              create: (context) {
+                                ProductDetailProvider provider = ProductDetailProvider();
+                                provider.loadProduct(model.id!);
+                                return provider;
+                              },
+                              child: Consumer<ProductDetailProvider>(
+                                  builder: (_, provider, __) {
+                                    return Container(
+                                        child: ProductDetailPage( id: model.id!));
+                                  }),
+                            )));
+                  },
+                );
+              });
   }
 
   Row buildProductItem(ProductInfoModel model) {
@@ -126,7 +130,7 @@ class _ProductListPageState extends State<ProductListPage> {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
