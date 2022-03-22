@@ -1,27 +1,4 @@
-class RecommendResponse {
-  List<ItemList>? itemList;
-
-  RecommendResponse({this.itemList});
-
-  RecommendResponse.fromJson(Map<String, dynamic> json) {
-    if (json['itemList'] != null) {
-      itemList = <ItemList>[];
-      json['itemList'].forEach((v) {
-        itemList!.add(new ItemList.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.itemList != null) {
-      data['itemList'] = this.itemList!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class ItemList {
+class DetailResponse {
   int? id;
   int? sellerId;
   String? sellerNick;
@@ -33,7 +10,7 @@ class ItemList {
   String? gmtCreate;
   String? gmtModified;
 
-  ItemList(
+  DetailResponse(
       {this.id,
         this.sellerId,
         this.sellerNick,
@@ -45,7 +22,7 @@ class ItemList {
         this.gmtCreate,
         this.gmtModified});
 
-  ItemList.fromJson(Map<String, dynamic> json) {
+  DetailResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     sellerId = json['sellerId'];
     sellerNick = json['sellerNick'];

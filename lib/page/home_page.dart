@@ -1,8 +1,9 @@
 import 'package:shopapp/model/recommend_response.dart';
+import 'package:shopapp/page/detail_page.dart';
+import 'package:shopapp/page/product_detail_page.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 }
-                List<ItemList> itemList = provider.data!.model!.itemList!;
+                List<ItemList> itemList = provider.result!.itemList!;
                 double listSize = itemList.length / 2;
                 int size = listSize.ceil();
                 print(size);
@@ -65,7 +66,6 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Expanded(child: buildItem(item1)),
-
                             Expanded(child: buildItem(item2)),
                           ],
                         );
@@ -73,7 +73,6 @@ class _HomePageState extends State<HomePage> {
                         return Row(
                           children: [
                             Expanded(child: buildItem(item1)),
-
                             Expanded(child: SizedBox())
                           ],
                         );
@@ -90,78 +89,87 @@ class _HomePageState extends State<HomePage> {
   }
 
   Container buildItem(ItemList item) {
-
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(4.0)),
           border: Border.all(width: 1, color: Colors.black),
         ),
-      child: InkWell(
-        child: Column(children: [
-          Image.network(
-            item.picUrl!,
-            height: 150,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                item.title!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 20.0,
+        child: InkWell(
+          child: Column(children: [
+            Image.network(
+              item.picUrl!,
+              height: 150,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  item.title!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                  ),
                 ),
-              ),
-
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                "￥${item.price}",
-                style: const TextStyle(fontSize: 18.0, color: Color(0xFFe93b3d)),
-              ),
-              Text(
-                "库存: ${item.stock}",
-                style: const TextStyle(
-                    fontSize: 13.0, color: Color(0xFF999999)),
-              ),
-
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-
-              Text(
-                "团长: ${item.sellerNick}",
-                style: const TextStyle(
-                    fontSize: 13.0, color: Color(0xFF999999)),
-              ),
-
-              Text(
-                " ${item.gmtCreate?.split("T")[0]}",
-                style: const TextStyle(
-                    fontSize: 13.0, color: Color(0xFF999999)),
-              ),
-
-            ],
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-        ]),
-        onTap: () {
-          print("click item: " + item.title!);
-        },
-      )
-    );
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  "￥${item.price}",
+                  style:
+                      const TextStyle(fontSize: 18.0, color: Color(0xFFe93b3d)),
+                ),
+                Text(
+                  "库存: ${item.stock}",
+                  style:
+                      const TextStyle(fontSize: 13.0, color: Color(0xFF999999)),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  "卖家: ${item.sellerNick}",
+                  style:
+                      const TextStyle(fontSize: 13.0, color: Color(0xFF999999)),
+                ),
+                Text(
+                  " ${item.gmtCreate?.split("T")[0]}",
+                  style:
+                      const TextStyle(fontSize: 13.0, color: Color(0xFF999999)),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20.0,
+            ),
+          ]),
+          onTap: () {
+            print("click item: " + item.title!);
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    ChangeNotifierProvider<ProductDetailProvider>(
+                      create: (context) {
+                        ProductDetailProvider provider =
+                            ProductDetailProvider();
+                        return provider;
+                      },
+                      child: Consumer<ProductDetailProvider>(
+                          builder: (_, provider, __) {
+                        provider.loadProduct(item.id.toString());
+                        return Container(
+                            child: DetailPage( id: item.id.toString())
+                        );
+                      }),
+                    )));
+          },
+        ));
   }
-
 }

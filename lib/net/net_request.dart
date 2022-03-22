@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ComResponse<T> {
   int code;
@@ -10,6 +11,17 @@ class ComResponse<T> {
 
   ComResponse({required this.code, this.msg, this.data});
 }
+
+
+class NetResponse <T> {
+  bool success;
+  T? model;
+  int code;
+  String message;
+
+  NetResponse(this.success, this.model, this.code, this.message);
+}
+
 
 class NetRequest {
   var dio = Dio();
@@ -33,7 +45,7 @@ class NetRequest {
     }
   }
 
-  Future<dynamic> request<T>(String path,
+  Future<NetResponse<T>> request<T>(String path,
       {Map<String, dynamic>? params,
         dynamic data,
         String method = "get"}) async {
@@ -41,9 +53,14 @@ class NetRequest {
       final response = method == "get"
           ? await dio.get(path, queryParameters: params)
           : await dio.post(path, data: data);
-      return response.data;
+      return NetResponse(
+          response.data['success'],
+          response.data['model'],
+          response.data['code'],
+          response.data['message']
+      );
     } on DioError catch(e) {
-      print(e.message);
+      print("dioError" + e.message);
       return Future.error(e.type.name + ":"  + e.message);
     }
   }

@@ -20,4 +20,6 @@ class MyApi {
 
   // 推荐商品
   static const String RECOMMEND = LOCAL_URL + "/shop/recommend";
+  // 商详页
+  static const String DETAIL = LOCAL_URL + "/shop/detail";
 }

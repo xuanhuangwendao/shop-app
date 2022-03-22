@@ -4,6 +4,7 @@ import 'package:shopapp/model/category_content_model.dart';
 import 'package:shopapp/model/product_detail_model.dart';
 import 'package:shopapp/model/product_info_model.dart';
 import 'package:shopapp/model/recommend_response.dart';
+import 'package:shopapp/model/summary_response.dart';
 import 'package:shopapp/net/net_request.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class BottomNaviProvider extends ChangeNotifier {
 
 class HomePageProvider extends ChangeNotifier {
 
-  RecommendResponse? data;
+  RecommendResponse? result;
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
@@ -31,7 +32,7 @@ class HomePageProvider extends ChangeNotifier {
     errorMsg = "";
     NetRequest().request(MyApi.RECOMMEND).then((response) {
       isLoading = false;
-      data =  RecommendResponse.fromJson(response);
+      result =  RecommendResponse.fromJson(response.model);
       notifyListeners();
     }).catchError((error) {
       isError = true;
@@ -130,33 +131,36 @@ class ProductListProvider extends ChangeNotifier {
     });
   }
 }
+
 class ProductDetailProvider extends ChangeNotifier {
 
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
   ProductDetailModel? model;
+  DetailResponse? result;
 
   loadProduct(String id) {
+    if (result != null && result!.id.toString() == id) {
+      print(id);
+      return;
+    }
     isLoading = true;
     isError = false;
     errorMsg = "";
-    NetRequest().requestData(MyApi.PRODUCTION_DETAIL).then((response) {
+    Map<String, dynamic> param = {'id': id};
+
+    NetRequest().request(MyApi.DETAIL, params: param).then((response) {
       isLoading = false;
-      if (response.code == 200 && response.data is List) {
-        for (var item in response.data) {
-          ProductDetailModel tmpModel = ProductDetailModel.fromJson(item);
-          if (tmpModel.partData?.id == id) {
-            model = tmpModel;
-            print(model?.toJson());
-          }
-         }
-      }
+      print("ProductDetailProvider:" + response.toString());
+      result =  DetailResponse.fromJson(response.model);
+      print(result!.toJson());
       notifyListeners();
     }).catchError((error) {
       isError = true;
       errorMsg = error;
       isLoading = false;
+      print(error);
       notifyListeners();
     });
   }
