@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class IndexPage extends StatefulWidget {
+
+
   const IndexPage({Key? key}) : super(key: key);
 
   @override
@@ -15,6 +17,7 @@ class IndexPage extends StatefulWidget {
 class _IndexPageState extends State<IndexPage> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         bottomNavigationBar: Consumer<BottomNaviProvider>(
           builder: (_, mProvider, __) => BottomNavigationBar(
@@ -35,6 +38,7 @@ class _IndexPageState extends State<IndexPage> {
               ),
             ],
             onTap: (index) {
+              print("this is " + index.toString() + " page");
               setState(() {
                 mProvider.changeBottomNaviIndex(index);
               });

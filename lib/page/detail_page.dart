@@ -1,4 +1,9 @@
+import 'package:shopapp/config/api.dart';
 import 'package:shopapp/model/summary_response.dart';
+import 'package:shopapp/net/net_request.dart';
+import 'package:shopapp/page/cart_page.dart';
+import 'package:shopapp/page/home_page.dart';
+import 'package:shopapp/page/index_page.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +18,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  int size = 1;
+  int itemNum = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -145,19 +150,17 @@ class _DetailPageState extends State<DetailPage> {
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: Text(size.toString() + "件"),
+                                child: Text(itemNum.toString() + "件"),
                               ),
                             ),
                             InkWell(
                               child: Row(
-                                children: [
-                                  const Icon(Icons.add)
-                                ],
+                                children: [const Icon(Icons.add)],
                               ),
                               onTap: () {
                                 this.setState(() {
-                                  size++;
-                                });// 选择商品个数
+                                  itemNum++;
+                                }); // 选择商品个数
                               },
                             ),
                             const SizedBox(
@@ -165,17 +168,15 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                             InkWell(
                               child: Row(
-                                children: [
-                                  const Icon(Icons.horizontal_rule)
-                                ],
+                                children: [const Icon(Icons.horizontal_rule)],
                               ),
                               onTap: () {
-                                if (size == 0) {
+                                if (itemNum <= 1) {
                                   return;
                                 }
                                 this.setState(() {
-                                  size--;
-                                });// 选择商品个数
+                                  itemNum--;
+                                }); // 选择商品个数
                               },
                             ),
                           ],
@@ -215,7 +216,25 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                             ),
                             onTap: () {
-                              //购物车
+                              print("goto cart");
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChangeNotifierProvider<
+                                              BottomNaviProvider>(
+                                            create: (context) {
+                                              BottomNaviProvider provider =
+                                                  BottomNaviProvider();
+                                              provider.changeBottomNaviIndex(1);
+                                              return provider;
+                                            },
+                                            child: Consumer<BottomNaviProvider>(
+                                                builder: (_, provider, __) {
+                                              return Container(
+                                                  child: IndexPage());
+                                            }),
+                                          )),
+                                  (route) => false);
                             },
                           ),
                         ),
@@ -237,6 +256,20 @@ class _DetailPageState extends State<DetailPage> {
                             ),
                             onTap: () {
                               //购物车
+                              NetRequest()
+                                  .request(MyApi.PLACE_ORDER, params: {"itemId": result.id, "num": itemNum})
+                                  .then((response) {
+                                    if (response.success) {
+                                      showAlertDialog(
+                                          context, "购物车", "添加成功，请在购物车中查看~");
+                                    } else {
+                                      showAlertDialog(context, "购物车", response.message);
+
+                                    }
+                              }).catchError((error) {
+                                print(error);
+                                showAlertDialog(context, "购物车", "添加失败，请重试~");
+                              });
                             },
                           ),
                         )
@@ -249,6 +282,30 @@ class _DetailPageState extends State<DetailPage> {
           },
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, String title, String text) {
+    //设置按钮
+    Widget okButton = FlatButton(
+        child: Text("确定"),
+        onPressed: () {
+          Navigator.pop(context);
+        });
+
+    //设置对话框
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(text),
+      actions: [okButton],
+    );
+
+    //显示对话框
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

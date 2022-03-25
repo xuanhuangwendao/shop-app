@@ -16,10 +16,15 @@ class MyApi {
   // 商详
   static const String PRODUCTION_DETAIL = BASE_URL + "/profiles/productionDetail";
 
+
   static const String LOCAL_URL = "http://192.168.31.42:7002";
 
   // 推荐商品
   static const String RECOMMEND = LOCAL_URL + "/shop/recommend";
+
   // 商详页
   static const String DETAIL = LOCAL_URL + "/shop/detail";
+
+  // 商品下单
+  static const String PLACE_ORDER = LOCAL_URL + "/shop/addCart";
 }

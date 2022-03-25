@@ -1,4 +1,3 @@
-
 import 'package:shopapp/config/api.dart';
 import 'package:shopapp/model/category_content_model.dart';
 import 'package:shopapp/model/product_detail_model.dart';
@@ -12,6 +11,7 @@ class BottomNaviProvider extends ChangeNotifier {
   int bottomNaviIndex = 0;
 
   void changeBottomNaviIndex(int index) {
+    print("selected " + bottomNaviIndex.toString() + " page");
     if (bottomNaviIndex != index) {
       bottomNaviIndex = index;
       notifyListeners();
@@ -20,7 +20,6 @@ class BottomNaviProvider extends ChangeNotifier {
 }
 
 class HomePageProvider extends ChangeNotifier {
-
   RecommendResponse? result;
   bool isLoading = false;
   bool isError = false;
@@ -32,7 +31,7 @@ class HomePageProvider extends ChangeNotifier {
     errorMsg = "";
     NetRequest().request(MyApi.RECOMMEND).then((response) {
       isLoading = false;
-      result =  RecommendResponse.fromJson(response.model);
+      result = RecommendResponse.fromJson(response.model);
       notifyListeners();
     }).catchError((error) {
       isError = true;
@@ -45,12 +44,11 @@ class HomePageProvider extends ChangeNotifier {
 }
 
 class CategoryPageProvider extends ChangeNotifier {
-
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
   List<String> categoryNavList = [];
-  List<CategoryContentModel>categoryContentList = [];
+  List<CategoryContentModel> categoryContentList = [];
   int tabIndex = 0;
 
   loadCategoryPageData() {
@@ -74,6 +72,7 @@ class CategoryPageProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+
   loadCategoryContentData(int index) {
     tabIndex = index;
     isLoading = true;
@@ -85,7 +84,8 @@ class CategoryPageProvider extends ChangeNotifier {
       isLoading = false;
       if (response.data is List) {
         for (var item in response.data) {
-          CategoryContentModel contentModel = CategoryContentModel.fromJson(item);
+          CategoryContentModel contentModel =
+              CategoryContentModel.fromJson(item);
           categoryContentList.add(contentModel);
         }
       }
@@ -101,9 +101,7 @@ class CategoryPageProvider extends ChangeNotifier {
   }
 }
 
-
 class ProductListProvider extends ChangeNotifier {
-
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
@@ -120,7 +118,6 @@ class ProductListProvider extends ChangeNotifier {
           ProductInfoModel model = ProductInfoModel.fromJson(item);
           list.add(model);
         }
-
       }
       notifyListeners();
     }).catchError((error) {
@@ -133,7 +130,6 @@ class ProductListProvider extends ChangeNotifier {
 }
 
 class ProductDetailProvider extends ChangeNotifier {
-
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
@@ -153,7 +149,7 @@ class ProductDetailProvider extends ChangeNotifier {
     NetRequest().request(MyApi.DETAIL, params: param).then((response) {
       isLoading = false;
       print("ProductDetailProvider:" + response.toString());
-      result =  DetailResponse.fromJson(response.model);
+      result = DetailResponse.fromJson(response.model);
       print(result!.toJson());
       notifyListeners();
     }).catchError((error) {
@@ -165,3 +161,5 @@ class ProductDetailProvider extends ChangeNotifier {
     });
   }
 }
+
+class CartProvider extends ChangeNotifier {}
