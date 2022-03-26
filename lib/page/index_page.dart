@@ -38,7 +38,6 @@ class _IndexPageState extends State<IndexPage> {
               ),
             ],
             onTap: (index) {
-              print("this is " + index.toString() + " page");
               setState(() {
                 mProvider.changeBottomNaviIndex(index);
               });

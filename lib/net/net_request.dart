@@ -13,7 +13,7 @@ class ComResponse<T> {
 }
 
 
-class NetResponse <T> {
+class NetResponse <T> { 
   bool success;
   T? model;
   int code;

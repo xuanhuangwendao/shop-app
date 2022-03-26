@@ -27,4 +27,7 @@ class MyApi {
 
   // 商品下单
   static const String PLACE_ORDER = LOCAL_URL + "/shop/addCart";
+
+  // 查询订单
+  static const String GET_ORDER = LOCAL_URL + "/shop/getOrder";
 }
