@@ -1,7 +1,10 @@
 class OrderResponse {
   List<CartItemList>? cartItemList;
+  double? totalAmount;
+  String? totalAmountText;
+  bool selectedAll = false;
 
-  OrderResponse({this.cartItemList});
+  OrderResponse({this.cartItemList, this.totalAmount, this.totalAmountText});
 
   OrderResponse.fromJson(Map<String, dynamic> json) {
     if (json['cartItemList'] != null) {
@@ -10,6 +13,8 @@ class OrderResponse {
         cartItemList!.add(new CartItemList.fromJson(v));
       });
     }
+    totalAmount = json['totalAmount'];
+    totalAmountText = json['totalAmountText'];
   }
 
   Map<String, dynamic> toJson() {
@@ -17,6 +22,8 @@ class OrderResponse {
     if (this.cartItemList != null) {
       data['cartItemList'] = this.cartItemList!.map((v) => v.toJson()).toList();
     }
+    data['totalAmount'] = this.totalAmount;
+    data['totalAmountText'] = this.totalAmountText;
     return data;
   }
 }
@@ -28,6 +35,8 @@ class CartItemList {
   double? price;
   String? priceText;
   int? num;
+  bool selected = false;
+
 
   CartItemList(
       {this.orderId,

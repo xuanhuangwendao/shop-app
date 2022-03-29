@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopapp/config/api.dart';
 import 'package:shopapp/model/order_response.dart';
+import 'package:shopapp/model/recommend_response.dart';
+import 'package:shopapp/net/net_request.dart';
 import 'package:shopapp/provider/provider.dart';
+import 'package:shopapp/util/alert_dialog.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -44,6 +48,19 @@ class _CartPageState extends State<CartPage> {
               } else {
                 List<CartItemList> cartItemList =
                     provider.result!.cartItemList!;
+                ;
+                double amountAll = 0.0;
+                bool allSelect = true;
+                for (CartItemList item in cartItemList) {
+                  if (provider.selectedMap[item.orderId]!) {
+                    amountAll += item.price! * item.num!;
+                  } else {
+                    allSelect = false;
+                  }
+                }
+                if (allSelect) {
+                  provider.selectedAll = true;
+                }
 
                 return Container(
                   child: Stack(
@@ -53,15 +70,19 @@ class _CartPageState extends State<CartPage> {
                           itemCount: cartItemList.length,
                           itemBuilder: (context, index) {
                             CartItemList item = cartItemList[index];
+
+                            bool selected = provider.selectedMap[item.orderId]!;
+
                             return Row(
                               children: [
                                 InkWell(
-                                  child: const Padding(
+                                  child:  Padding(
                                     padding: EdgeInsets.only(left: 8),
-                                    child: Icon(Icons.radio_button_off),
+                                    child: selected ? Icon(Icons.radio_button_checked): Icon(Icons.radio_button_off)
+                                    // child: Icon(Icons.radio_button_off),
                                   ),
                                   onTap: () {
-                                    // 选中
+                                    provider.select(item.orderId!);
                                   },
                                 ),
                                 Expanded(
@@ -119,7 +140,30 @@ class _CartPageState extends State<CartPage> {
                                                       ],
                                                     ),
                                                     onTap: () {
-                                                      // 选择商品个数
+                                                      Map<String, dynamic> params = {
+                                                        "orderId": item.orderId,
+                                                        "operation": "update",
+                                                        "content": "1"
+                                                      };
+
+                                                      NetRequest()
+                                                          .request(MyApi.MODIFY_ORDER, params: params)
+                                                          .then((response) {
+                                                        if (response.success) {
+
+                                                        } else {
+                                                          showAlertDialog(context, "", response.message);
+
+                                                        }
+                                                        provider.loadCart();
+
+                                                      }).catchError((error) {
+                                                        print(error);
+                                                        provider.loadCart();
+
+                                                        showAlertDialog(context, "", "操作失败，请重试~");
+
+                                                      });
                                                     },
                                                   ),
                                                   SizedBox(
@@ -144,7 +188,35 @@ class _CartPageState extends State<CartPage> {
                                                       ],
                                                     ),
                                                     onTap: () {
-                                                      // 选择商品个数
+                                                      if (item.num! < 0) {
+                                                        showAlertDialog(context, "", "操作失败，请重试~");
+                                                        provider.loadCart();
+                                                        return;
+                                                      }
+
+                                                      Map<String, dynamic> params = {
+                                                        "orderId": item.orderId,
+                                                        "operation": "update",
+                                                        "content": "-1"
+                                                      };
+                                                      NetRequest()
+                                                          .request(MyApi.MODIFY_ORDER, params: params)
+                                                          .then((response) {
+                                                        if (response.success) {
+
+                                                        } else {
+                                                          showAlertDialog(context, "", response.message);
+
+                                                        }
+                                                        provider.loadCart();
+
+                                                      }).catchError((error) {
+                                                        print(error);
+                                                        provider.loadCart();
+
+                                                        showAlertDialog(context, "", "操作失败，请重试~");
+
+                                                      });
                                                     },
                                                   ),
                                                   SizedBox(
@@ -180,11 +252,12 @@ class _CartPageState extends State<CartPage> {
                           child: Row(
                             children: [
                               InkWell(
-                                child: const Padding(
+                                child: Padding(
                                   padding: EdgeInsets.only(left: 5, right: 5),
-                                  child: Icon(Icons.radio_button_off),
+                                  child: provider.selectedAll ? Icon(Icons.radio_button_checked) : Icon(Icons.radio_button_off),
                                 ),
                                 onTap: () {
+                                  provider.selectAll();
                                   //选中
                                 },
                               ),
@@ -202,28 +275,35 @@ class _CartPageState extends State<CartPage> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              const Text(
-                                "￥300.00",
+                              Text(
+                                  "￥" + amountAll.toStringAsFixed(2),
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.w400,
                                     fontSize: 16),
                               ),
                               Spacer(),
-                              Container(
-                                width: 120,
-                                height: double.infinity,
-                                color: Colors.red,
-                                child: const Center(
-                                  child: Text(
-                                    "去结算",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16),
+
+                              InkWell(
+                                child: Container(
+                                  width: 120,
+                                  height: double.infinity,
+                                  color: Colors.red,
+                                  child: const Center(
+                                    child: Text(
+                                      "去结算",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
                                   ),
                                 ),
-                              )
+                                onTap: () {
+                                  provider.loadCart();
+                                },
+                              ),
+
                             ],
                           ),
                         ),

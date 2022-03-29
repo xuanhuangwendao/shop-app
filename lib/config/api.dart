@@ -30,4 +30,7 @@ class MyApi {
 
   // 查询订单
   static const String GET_ORDER = LOCAL_URL + "/shop/getOrder";
+
+  // 修改订单
+  static const String MODIFY_ORDER = LOCAL_URL + "/shop/updateOrder";
 }

@@ -167,16 +167,21 @@ class CartProvider extends ChangeNotifier {
   bool isError = false;
   String? errorMsg = "";
   OrderResponse? result;
+  bool selectedAll = false;
+  Map<int, bool> selectedMap = {};
 
   loadCart() {
     isLoading = true;
     isError = false;
     errorMsg = "";
+    selectedMap = {};
     Map<String, dynamic> param = {"status": 1};
     NetRequest().request(MyApi.GET_ORDER, params: param).then((response) {
       isLoading = false;
       result = OrderResponse.fromJson(response.model);
-      print(result!.toJson());
+      for (CartItemList item in result!.cartItemList!) {
+        selectedMap[item.orderId!] = false;
+      }
       notifyListeners();
     }).catchError((error) {
       isError = true;
@@ -187,12 +192,18 @@ class CartProvider extends ChangeNotifier {
     });
   }
 
-
-
-
-
-
-
-
-
+  selectAll() {
+    selectedAll = !selectedAll;
+    selectedMap.forEach((key, value) {
+      selectedMap[key] = selectedAll;
+    });
+    notifyListeners();
+  }
+  select(int id) {
+    selectedMap[id] = !selectedMap[id]!;
+    if (!selectedMap[id]!) {
+      selectedAll = false;
+    }
+    notifyListeners();
+  }
 }
