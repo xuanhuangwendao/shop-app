@@ -1,4 +1,5 @@
 import 'package:provider/provider.dart';
+import 'package:shopapp/page/login_page.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:shopapp/page/index_page.dart';
@@ -31,7 +32,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const IndexPage(),
+      // home: const IndexPage(),
+      home: Scaffold(
+        body: LoginPage(),
+      ),
     );
   }
 }

@@ -33,4 +33,7 @@ class MyApi {
 
   // 修改订单
   static const String MODIFY_ORDER = LOCAL_URL + "/shop/updateOrder";
+
+  // 登录
+  static const String LOGIN = LOCAL_URL + "/user/login";
 }

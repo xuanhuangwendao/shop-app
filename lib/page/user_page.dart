@@ -14,7 +14,29 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         title: Text("我的  "),
       ),
-      body: Container(),
+      body: Container(
+        child: ListView(
+          children: [
+            getUserHeader()
+
+
+          ],
+        ),
+
+
+      ),
     );
   }
+}
+//顶部用户信息
+Widget getUserHeader(){
+  return Container(
+    width: double.infinity,
+    height: 140,
+    decoration: BoxDecoration(
+      gradient:const LinearGradient(
+          colors:[Color(0xFFE43B3A), Color(0xFFF07157)]
+      ),
+    ),
+  );
 }
