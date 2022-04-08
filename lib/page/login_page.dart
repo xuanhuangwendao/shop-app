@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopapp/config/api.dart';
 import 'package:shopapp/net/net_request.dart';
+import 'package:shopapp/page/register_page.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:shopapp/util/alert_dialog.dart';
 
@@ -35,10 +36,10 @@ class _LoginPageState extends State<LoginPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 120,
             ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: const <Widget>[
               Text(
                 '社区团购',
                 textAlign: TextAlign.right,
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ]),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: const <Widget>[
               Text(
                 '登录',
                 textAlign: TextAlign.right,
@@ -61,9 +62,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ]),
-            SizedBox(height: 120),
+            const SizedBox(height: 120),
             SizedBox(
-              child: new Container(
+              child: Container(
                 padding: EdgeInsets.fromLTRB(20, 2, 8, 2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.center,
                 child: TextField(
                   maxLines: 1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '用户名',
                     border: InputBorder.none,
                   ),
@@ -80,11 +81,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             SizedBox(
-              child: new Container(
+              child: Container(
                 padding: EdgeInsets.fromLTRB(20, 2, 8, 2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
@@ -93,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.center,
                 child: TextField(
                   maxLines: 1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '密码',
                     border: InputBorder.none,
                   ),
@@ -102,65 +103,92 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             SizedBox(
                 child: InkWell(
-              child: new Container(
-                  padding: EdgeInsets.fromLTRB(2, 15, 2, 15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.deepOrangeAccent,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '登录',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        letterSpacing: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white70),
-                  )),
-              onTap: () {
-                print(username.text);
-                print(password.text);
+                  child: Container(
+                      padding: EdgeInsets.fromLTRB(2, 15, 2, 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.deepOrangeAccent,
+                      ),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        '登录',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            letterSpacing: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70),
+                      )),
+                  onTap: () {
+                    print(username.text);
+                    print(password.text);
 
-                Map<String, dynamic> params = {
-                  "username": username.text,
-                  "password": password.text
-                };
-                NetRequest()
-                    .request(MyApi.LOGIN, params: params)
-                    .then((response) {
-                  if (response.code == 200) {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ChangeNotifierProvider<
-                                    BottomNaviProvider>(
-                                  create: (context) {
-                                    BottomNaviProvider provider =
-                                    BottomNaviProvider();
-                                    provider.changeBottomNaviIndex(0);
-                                    return provider;
-                                  },
-                                  child: Consumer<BottomNaviProvider>(
-                                      builder: (_, provider, __) {
-                                        return Container(
-                                            child: IndexPage());
-                                      }),
-                                )),
-                            (route) => false);
-                  } else {
-                    showAlertDialog(context, "登录失败", "");
-                  }
-                }).catchError((error) {
-                  print(error);
-                  showAlertDialog(context, "", "error");
-                });
-              },
-            )),
+                    Map<String, dynamic> params = {
+                      "username": username.text,
+                      "password": password.text
+                    };
+                    NetRequest()
+                        .request(MyApi.LOGIN, params: params)
+                        .then((response) {
+                      if (response.code == 200) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ChangeNotifierProvider<BottomNaviProvider>(
+                                      create: (context) {
+                                        BottomNaviProvider provider =
+                                        BottomNaviProvider();
+                                        provider.changeBottomNaviIndex(0);
+                                        return provider;
+                                      },
+                                      child: Consumer<BottomNaviProvider>(
+                                          builder: (_, provider, __) {
+                                            return Container(child: IndexPage());
+                                          }),
+                                    )),
+                                (route) => false);
+                      } else {
+                        showAlertDialog(context, "登录失败", "");
+                      }
+                    }).catchError((error) {
+                      print(error);
+                      showAlertDialog(context, "", "error");
+                    });
+                  },
+                )),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+                child: InkWell(
+                  child: Container(
+                      padding: EdgeInsets.fromLTRB(2, 15, 2, 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.deepOrangeAccent,
+                      ),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        '注册',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            letterSpacing: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70),
+                      )),
+                  onTap: () {
+                    Navigator.push(context,
+                        new MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return  RegisterPage();
+                          },
+                        ));
+                  },
+                )),
           ],
         ),
       ),
