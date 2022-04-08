@@ -19,4 +19,7 @@ class MyApi {
 
   // 登录
   static const String LOGIN = LOCAL_URL + "/user/login";
+
+  // 注册
+  static const String REGISTER = LOCAL_URL + "/user/register";
 }

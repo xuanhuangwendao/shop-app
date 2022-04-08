@@ -1,6 +1,10 @@
 //登录界面
 
 import 'package:flutter/material.dart';
+import 'package:shopapp/config/api.dart';
+import 'package:shopapp/net/net_request.dart';
+import 'package:shopapp/page/login_page.dart';
+import 'package:shopapp/util/alert_dialog.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -27,6 +31,9 @@ class _RegisterPageState extends State<RegisterPage> {
     password2.addListener(() {});
     nickName = TextEditingController();
     nickName.addListener(() {});
+    address = TextEditingController();
+    address.addListener(() {});
+
   }
 
   @override
@@ -121,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: '用户昵称',
                     border: InputBorder.none,
                   ),
-                  controller: username,
+                  controller: nickName,
                 ),
               ),
             ),
@@ -142,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     hintText: '住址',
                     border: InputBorder.none,
                   ),
-                  controller: username,
+                  controller: address,
                 ),
               ),
             ),
@@ -167,11 +174,32 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: Colors.white70),
                       )),
                   onTap: () {
-                    print(username.text);
-                    print(password.text);
-                    print(password2.text);
-                    print(nickName.text);
-                    Navigator.pop(context);
+
+                    Map<String, dynamic> data = {
+                      "username": username.text,
+                      "password": password.text,
+                      "nickname": nickName.text,
+                      "address": address.text
+                    };
+                    NetRequest()
+                        .request(MyApi.REGISTER, data: data, method: "post")
+                        .then((response) {
+                      if (response.code == 200) {
+                        showAlertDialog(context, "注册成功", "");
+                        Navigator.push(context,
+                            new MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return  LoginPage();
+                              },
+                            ));
+
+                      } else {
+                        showAlertDialog(context, "注册失败", "");
+                      }
+                    }).catchError((error) {
+                      print(error);
+                      showAlertDialog(context, "注册失败", "");
+                    });
 
                   },
                 )),
