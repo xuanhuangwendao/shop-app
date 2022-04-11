@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopapp/config/api.dart';
 import 'package:shopapp/net/net_request.dart';
 import 'package:shopapp/page/register_page.dart';
@@ -134,8 +135,12 @@ class _LoginPageState extends State<LoginPage> {
                       };
                       NetRequest()
                           .request(MyApi.LOGIN, params: params)
-                          .then((response) {
+                          .then((response) async {
                         if (response.code == 200) {
+                          print(response.model);
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setString('token', response.model);
+
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (context) =>

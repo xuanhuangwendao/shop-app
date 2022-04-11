@@ -98,7 +98,6 @@ class CartProvider extends ChangeNotifier {
       notifyListeners();
     }).catchError((error) {
       isError = true;
-      errorMsg = error;
       isLoading = false;
       print(error);
       notifyListeners();
@@ -118,5 +117,31 @@ class CartProvider extends ChangeNotifier {
       selectedAll = false;
     }
     notifyListeners();
+  }
+}
+
+class UserInfoProvider extends ChangeNotifier {
+  bool isLoading = false;
+  bool isError = false;
+  String? errorMsg = "";
+  DetailResponse? result;
+
+  loadUserInfo() {
+    isLoading = true;
+    isError = false;
+    errorMsg = "";
+
+    NetRequest().request(MyApi.USER_INFO).then((response) {
+      isLoading = false;
+      result = DetailResponse.fromJson(response.model);
+      print(result!.toJson());
+      notifyListeners();
+    }).catchError((error) {
+      isError = true;
+      errorMsg = error;
+      isLoading = false;
+      print(error);
+      notifyListeners();
+    });
   }
 }

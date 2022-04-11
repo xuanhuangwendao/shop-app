@@ -22,4 +22,15 @@ class MyApi {
 
   // 注册
   static const String REGISTER = LOCAL_URL + "/user/register";
+
+  // 获取用户信息
+  static const String USER_INFO = LOCAL_URL + "/user/userInfo";
+
+  // 上传图片
+  static const String UP_LOAD = LOCAL_URL + "/file/upload";
+
+  // 读取图片
+  static const String READ_IMG = LOCAL_URL + "/file/img";
+
+
 }

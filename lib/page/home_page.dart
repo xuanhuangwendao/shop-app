@@ -1,6 +1,5 @@
 import 'package:shopapp/model/recommend_response.dart';
 import 'package:shopapp/page/detail_page.dart';
-import 'package:shopapp/page/product_detail_page.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
