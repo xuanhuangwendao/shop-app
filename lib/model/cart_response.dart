@@ -1,20 +1,15 @@
-class OrderResponse {
+class CartResponse {
   List<CartItemList>? cartItemList;
-  double? totalAmount;
-  String? totalAmountText;
-  bool selectedAll = false;
 
-  OrderResponse({this.cartItemList, this.totalAmount, this.totalAmountText});
+  CartResponse({this.cartItemList});
 
-  OrderResponse.fromJson(Map<String, dynamic> json) {
+  CartResponse.fromJson(Map<String, dynamic> json) {
     if (json['cartItemList'] != null) {
       cartItemList = <CartItemList>[];
       json['cartItemList'].forEach((v) {
         cartItemList!.add(new CartItemList.fromJson(v));
       });
     }
-    totalAmount = json['totalAmount'];
-    totalAmountText = json['totalAmountText'];
   }
 
   Map<String, dynamic> toJson() {
@@ -22,34 +17,30 @@ class OrderResponse {
     if (this.cartItemList != null) {
       data['cartItemList'] = this.cartItemList!.map((v) => v.toJson()).toList();
     }
-    data['totalAmount'] = this.totalAmount;
-    data['totalAmountText'] = this.totalAmountText;
     return data;
   }
 }
 
 class CartItemList {
   int? orderId;
-  String? picUrl;
   String? title;
+  String? picUrl;
   double? price;
   String? priceText;
   int? num;
-  bool selected = false;
-
 
   CartItemList(
       {this.orderId,
-        this.picUrl,
         this.title,
+        this.picUrl,
         this.price,
         this.priceText,
         this.num});
 
   CartItemList.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
-    picUrl = json['picUrl'];
     title = json['title'];
+    picUrl = json['picUrl'];
     price = json['price'];
     priceText = json['priceText'];
     num = json['num'];
@@ -58,8 +49,8 @@ class CartItemList {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['orderId'] = this.orderId;
-    data['picUrl'] = this.picUrl;
     data['title'] = this.title;
+    data['picUrl'] = this.picUrl;
     data['price'] = this.price;
     data['priceText'] = this.priceText;
     data['num'] = this.num;

@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopapp/config/api.dart';
+import 'package:shopapp/model/user_info_response.dart';
+import 'package:shopapp/provider/provider.dart';
 import 'package:shopapp/util/file.dart';
 
 class UserPage extends StatefulWidget {
@@ -12,23 +16,56 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("我的 "),
-      ),
-      body: Container(
-        child: ListView(
-          children: [
-            getUserHeader()
-          ],
+    return ChangeNotifierProvider<UserInfoProvider>(
+      create: (context){
+        var provider = UserInfoProvider();
+        provider.loadUserInfo();
+        return provider;
+      },
+      child:  Scaffold(
+        appBar: AppBar(
+          title: Text("我的 "),
         ),
-      ),
+        body: Consumer<UserInfoProvider>(
+          builder: (_, provider, __) {
+            if (provider.isLoading) {
+              return const Center(
+                child: CupertinoActivityIndicator(),
+              );
+            }
+            if (provider.isError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlineButton(
+                      onPressed: () {
+                        provider.loadUserInfo();
+                      },
+                      child: const Text("刷新"),
+                    )
+                  ],
+                ),
+              );
+            }
+            UserInfoResponse result = provider.result!;
+            return Container(
+              child: ListView(
+                children: [
+                  getUserHeader(result, provider)
+                ],
+              ),
+            );
+          },
+        ),
+
+      )
     );
   }
 }
 
 //顶部用户信息
-Widget getUserHeader() {
+Widget getUserHeader(UserInfoResponse userInfo, UserInfoProvider provider) {
   return Container(
     width: double.infinity,
     height: 140,
@@ -43,13 +80,16 @@ Widget getUserHeader() {
             children: <Widget>[
               InkWell(
                 child: Image.network(
-                  MyApi.LOCAL_URL + "/2b2d37a04ad345c2997550be1201017c.jpg",
+                  userInfo.profilePic!,
+                  // "http://192.168.31.42:7002/img/3935b4c18b15431ba6a225e0541a1fd3.jpg",
                   height: 90,
                   width: 90,
                 ),
                 onTap: () {
                   uploadHeader("1");
                   print("更换头像");
+                  provider.loadUserInfo();
+
                 },
               ),
               const SizedBox(
@@ -61,13 +101,14 @@ Widget getUserHeader() {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      const Text(
-                        "用户昵称",
+                       Text(
+                        userInfo.nickName!,
                         style: TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 20.0,
                           color: Color(0xFFFDE5E3),
                         ),
                       ),
+
                       Container(
                           padding: EdgeInsets.all(2.0),
                           margin: EdgeInsets.all(2.0),
@@ -80,8 +121,11 @@ Widget getUserHeader() {
                           ))
                     ],
                   ),
-                  const Text(
-                    "⽤户名",
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    userInfo.sign!,
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Color(0xFFFABBB7),

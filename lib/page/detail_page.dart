@@ -1,8 +1,6 @@
 import 'package:shopapp/config/api.dart';
-import 'package:shopapp/model/summary_response.dart';
+import 'package:shopapp/model/detail_response.dart';
 import 'package:shopapp/net/net_request.dart';
-import 'package:shopapp/page/cart_page.dart';
-import 'package:shopapp/page/home_page.dart';
 import 'package:shopapp/page/index_page.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,7 +49,7 @@ class _DetailPageState extends State<DetailPage> {
               );
             }
             // 获取model
-            DetailResponse result = provider.result!;
+            DetailResponse result = provider.model!;
             return Stack(
               children: [
                 // 主题内容
@@ -97,6 +95,16 @@ class _DetailPageState extends State<DetailPage> {
                             fontSize: 16.0,
                             color: Colors.red,
                             fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      color: Colors.white,
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        "${result.sellerName!}",
+                        style: const TextStyle(
+                            fontSize: 14.0),
                       ),
                     ),
                     // 白条支付

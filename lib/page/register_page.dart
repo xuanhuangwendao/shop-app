@@ -19,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   var password2;
   var nickName;
   var address;
+  var sign;
 
   @override
   void initState() {
@@ -33,6 +34,8 @@ class _RegisterPageState extends State<RegisterPage> {
     nickName.addListener(() {});
     address = TextEditingController();
     address.addListener(() {});
+    sign = TextEditingController();
+    sign.addListener(() {});
 
   }
 
@@ -154,6 +157,27 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 2, 8, 2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.black12,
+                ),
+                alignment: Alignment.center,
+                child: TextField(
+                  maxLines: 1,
+                  decoration: const InputDecoration(
+                    hintText: '个性签名',
+                    border: InputBorder.none,
+                  ),
+                  controller: sign,
+                ),
+              ),
+            ),
+            const SizedBox(
               height: 30,
             ),
             SizedBox(
@@ -179,7 +203,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       "username": username.text,
                       "password": password.text,
                       "nickname": nickName.text,
-                      "address": address.text
+                      "address": address.text,
+                      "sign": sign.text
                     };
                     NetRequest()
                         .request(MyApi.REGISTER, data: data, method: "post")

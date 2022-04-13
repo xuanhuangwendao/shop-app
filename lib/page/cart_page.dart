@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopapp/config/api.dart';
-import 'package:shopapp/model/order_response.dart';
-import 'package:shopapp/model/recommend_response.dart';
+import 'package:shopapp/model/cart_response.dart';
 import 'package:shopapp/net/net_request.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:shopapp/util/alert_dialog.dart';
@@ -54,7 +52,7 @@ class _CartPageState extends State<CartPage> {
                 bool allSelect = true;
                 for (CartItemList item in cartItemList) {
                   if (provider.selectedMap[item.orderId]!) {
-                    amountAll += item.price! * item.num!;
+                    amountAll += item.price!;
                   } else {
                     allSelect = false;
                   }
@@ -161,7 +159,6 @@ class _CartPageState extends State<CartPage> {
                                                       }).catchError((error) {
                                                         print(error);
                                                         provider.loadCart();
-
                                                         showAlertDialog(context, "", "操作失败，请重试~");
 
                                                       });

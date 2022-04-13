@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopapp/config/api.dart';
+import 'package:shopapp/model/login_response.dart';
 import 'package:shopapp/net/net_request.dart';
 import 'package:shopapp/page/register_page.dart';
 import 'package:shopapp/provider/provider.dart';
@@ -137,9 +138,9 @@ class _LoginPageState extends State<LoginPage> {
                           .request(MyApi.LOGIN, params: params)
                           .then((response) async {
                         if (response.code == 200) {
-                          print(response.model);
+                          LoginResponse model = LoginResponse.fromJson(response.model);
                           final prefs = await SharedPreferences.getInstance();
-                          await prefs.setString('token', response.model);
+                          await prefs.setString('token', model.token!);
 
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(

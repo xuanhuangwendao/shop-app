@@ -123,11 +123,7 @@ class _HomePageState extends State<HomePage> {
                   style:
                       const TextStyle(fontSize: 18.0, color: Color(0xFFe93b3d)),
                 ),
-                Text(
-                  "库存: ${item.stock}",
-                  style:
-                      const TextStyle(fontSize: 13.0, color: Color(0xFF999999)),
-                ),
+
               ],
             ),
             Row(
@@ -135,15 +131,11 @@ class _HomePageState extends State<HomePage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  "卖家: ${item.sellerNick}",
+                  "卖家: ${item.sellerName}",
                   style:
                       const TextStyle(fontSize: 13.0, color: Color(0xFF999999)),
                 ),
-                Text(
-                  " ${item.gmtCreate?.split("T")[0]}",
-                  style:
-                      const TextStyle(fontSize: 13.0, color: Color(0xFF999999)),
-                ),
+
               ],
             ),
             const SizedBox(

@@ -1,10 +1,8 @@
 import 'package:shopapp/config/api.dart';
-import 'package:shopapp/model/category_content_model.dart';
-import 'package:shopapp/model/order_response.dart';
-import 'package:shopapp/model/product_detail_model.dart';
-import 'package:shopapp/model/product_info_model.dart';
+import 'package:shopapp/model/cart_response.dart';
+import 'package:shopapp/model/detail_response.dart';
 import 'package:shopapp/model/recommend_response.dart';
-import 'package:shopapp/model/summary_response.dart';
+import 'package:shopapp/model/user_info_response.dart';
 import 'package:shopapp/net/net_request.dart';
 import 'package:flutter/material.dart';
 
@@ -47,12 +45,10 @@ class ProductDetailProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
-  ProductDetailModel? model;
-  DetailResponse? result;
+  DetailResponse? model;
 
   loadProduct(String id) {
-    if (result != null && result!.id.toString() == id) {
-      print(id);
+    if (model != null && model!.id.toString() == id) {
       return;
     }
     isLoading = true;
@@ -62,8 +58,7 @@ class ProductDetailProvider extends ChangeNotifier {
 
     NetRequest().request(MyApi.DETAIL, params: param).then((response) {
       isLoading = false;
-      result = DetailResponse.fromJson(response.model);
-      print(result!.toJson());
+      model = DetailResponse.fromJson(response.model);
       notifyListeners();
     }).catchError((error) {
       isError = true;
@@ -79,7 +74,7 @@ class CartProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
-  OrderResponse? result;
+  CartResponse? result;
   bool selectedAll = false;
   Map<int, bool> selectedMap = {};
 
@@ -91,7 +86,9 @@ class CartProvider extends ChangeNotifier {
     Map<String, dynamic> param = {"status": 1};
     NetRequest().request(MyApi.GET_ORDER, params: param).then((response) {
       isLoading = false;
-      result = OrderResponse.fromJson(response.model);
+      print(response.model);
+
+      result = CartResponse.fromJson(response.model);
       for (CartItemList item in result!.cartItemList!) {
         selectedMap[item.orderId!] = false;
       }
@@ -124,7 +121,7 @@ class UserInfoProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isError = false;
   String? errorMsg = "";
-  DetailResponse? result;
+  UserInfoResponse? result;
 
   loadUserInfo() {
     isLoading = true;
@@ -133,7 +130,7 @@ class UserInfoProvider extends ChangeNotifier {
 
     NetRequest().request(MyApi.USER_INFO).then((response) {
       isLoading = false;
-      result = DetailResponse.fromJson(response.model);
+      result = UserInfoResponse.fromJson(response.model);
       print(result!.toJson());
       notifyListeners();
     }).catchError((error) {
