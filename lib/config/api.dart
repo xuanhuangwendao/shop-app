@@ -25,6 +25,9 @@ class MyApi {
   // 修改订单
   static const String MODIFY_ORDER = LOCAL_URL + "/pay/updateOrder";
 
+  // 支付订单
+  static const String PAY_ORDER = LOCAL_URL + "/pay/payOrder";
+
 
   // 获取用户信息
   static const String USER_INFO = LOCAL_URL + "/user/myUserInfo";

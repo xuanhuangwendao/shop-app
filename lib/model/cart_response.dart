@@ -28,6 +28,9 @@ class CartItemList {
   double? price;
   String? priceText;
   int? num;
+  String? status;
+  String? createTime;
+  String? payTime;
 
   CartItemList(
       {this.orderId,
@@ -35,7 +38,11 @@ class CartItemList {
         this.picUrl,
         this.price,
         this.priceText,
-        this.num});
+        this.num,
+        this.status,
+        this.createTime,
+        this.payTime
+      });
 
   CartItemList.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
@@ -44,6 +51,9 @@ class CartItemList {
     price = json['price'];
     priceText = json['priceText'];
     num = json['num'];
+    status = json['status'];
+    createTime = json['createTime'];
+    payTime = json['payTime'];
   }
 
   Map<String, dynamic> toJson() {
@@ -54,6 +64,8 @@ class CartItemList {
     data['price'] = this.price;
     data['priceText'] = this.priceText;
     data['num'] = this.num;
+    data['status'] = this.status;
+    data['createTime'] = this.payTime;
     return data;
   }
 }

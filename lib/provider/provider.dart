@@ -117,6 +117,39 @@ class CartProvider extends ChangeNotifier {
   }
 }
 
+class OrderProvider extends ChangeNotifier {
+  bool isLoading = false;
+  bool isError = false;
+  String? errorMsg = "";
+  CartResponse? result;
+  bool selectedAll = false;
+  Map<int, bool> selectedMap = {};
+
+
+  loadOrder() {
+    isLoading = true;
+    isError = false;
+    errorMsg = "";
+    selectedMap = {};
+    Map<String, dynamic> param = {"status": 0};
+    NetRequest().request(MyApi.GET_ORDER, params: param).then((response) {
+      isLoading = false;
+      print(response.model);
+
+      result = CartResponse.fromJson(response.model);
+      for (CartItemList item in result!.cartItemList!) {
+        selectedMap[item.orderId!] = false;
+      }
+      notifyListeners();
+    }).catchError((error) {
+      isError = true;
+      isLoading = false;
+      print(error);
+      notifyListeners();
+    });
+  }
+}
+
 class UserInfoProvider extends ChangeNotifier {
   bool isLoading = false;
   bool isError = false;

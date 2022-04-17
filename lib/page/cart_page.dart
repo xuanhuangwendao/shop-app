@@ -50,9 +50,11 @@ class _CartPageState extends State<CartPage> {
                 ;
                 double amountAll = 0.0;
                 bool allSelect = true;
+                List payList = [];
                 for (CartItemList item in cartItemList) {
                   if (provider.selectedMap[item.orderId]!) {
                     amountAll += item.price!;
+                    payList.add(item.orderId);
                   } else {
                     allSelect = false;
                   }
@@ -298,6 +300,22 @@ class _CartPageState extends State<CartPage> {
                                   ),
                                 ),
                                 onTap: () {
+                                  Map<String, dynamic> data = {
+                                    "orderList": payList
+                                  };
+                                  NetRequest()
+                                      .request(MyApi.PAY_ORDER, data: data, method: "post")
+                                      .then((response) {
+                                    if (response.code == 200) {
+                                      provider.loadCart();
+                                      showAlertDialog(context, "支付成功", "");
+                                    } else {
+                                      showAlertDialog(context, "支付成功", response.message);
+                                    }
+                                  }).catchError((error) {
+                                    print(error);
+                                    showAlertDialog(context, "支付失败", "未知错误");
+                                  });
                                   provider.loadCart();
                                 },
                               ),
