@@ -15,6 +15,14 @@ class MyApi {
   // 商详页
   static const String DETAIL = LOCAL_URL + "/shop/detail";
 
+  // 供给
+  static const String GOODS = LOCAL_URL + "/shop/goods";
+
+  // 供给详情
+  static const String GOODS_ITEM = LOCAL_URL + "/shop/goodsItem";
+
+  // 开团
+  static const String CREATE_SHOP = LOCAL_URL + "/shop/createShop";
 
   // 商品下单
   static const String PLACE_ORDER = LOCAL_URL + "/pay/addCart";

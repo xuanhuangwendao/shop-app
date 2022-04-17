@@ -40,6 +40,23 @@ class HomePageProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+  loadGoodsPageData() {
+    print("view home");
+    isLoading = true;
+    isError = false;
+    errorMsg = "";
+    NetRequest().request(MyApi.GOODS).then((response) {
+      isLoading = false;
+      result = RecommendResponse.fromJson(response.model);
+      notifyListeners();
+    }).catchError((error) {
+      isError = true;
+      print(error);
+      errorMsg = error.toString();
+      isLoading = false;
+      notifyListeners();
+    });
+  }
 }
 class ProductDetailProvider extends ChangeNotifier {
   bool isLoading = false;
@@ -57,6 +74,27 @@ class ProductDetailProvider extends ChangeNotifier {
     Map<String, dynamic> param = {'id': id};
 
     NetRequest().request(MyApi.DETAIL, params: param).then((response) {
+      isLoading = false;
+      model = DetailResponse.fromJson(response.model);
+      notifyListeners();
+    }).catchError((error) {
+      isError = true;
+      errorMsg = error;
+      isLoading = false;
+      print(error);
+      notifyListeners();
+    });
+  }
+  loadGoods(String id) {
+    if (model != null && model!.id.toString() == id) {
+      return;
+    }
+    isLoading = true;
+    isError = false;
+    errorMsg = "";
+    Map<String, dynamic> param = {'id': id};
+
+    NetRequest().request(MyApi.GOODS_ITEM, params: param).then((response) {
       isLoading = false;
       model = DetailResponse.fromJson(response.model);
       notifyListeners();

@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:shopapp/config/api.dart';
 import 'package:shopapp/model/detail_response.dart';
 import 'package:shopapp/net/net_request.dart';
@@ -7,16 +8,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DetailPage extends StatefulWidget {
+class SellerDetailPage extends StatefulWidget {
   final String id;
-  const DetailPage({Key? key, required this.id}) : super(key: key);
+  const SellerDetailPage({Key? key, required this.id}) : super(key: key);
 
   @override
-  _DetailPageState createState() => _DetailPageState();
+  _SellerDetailPageState createState() => _SellerDetailPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _SellerDetailPageState extends State<SellerDetailPage> {
   int itemNum = 1;
+  var price;
+  var desc;
+
+  @override
+  void initState() {
+    super.initState();
+    price = TextEditingController();
+    price.addListener(() {});
+    desc = TextEditingController();
+    desc.addListener(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,81 +86,7 @@ class _DetailPageState extends State<DetailPage> {
                             fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Container(
-                      color: Colors.white,
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "商品介绍：" + result.desc!,
-                        style: const TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ),
-                    // 价格
-                    Container(
-                      width: double.infinity,
-                      color: Colors.white,
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "￥${result.price!}",
-                        style: const TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      color: Colors.white,
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "卖家：${result.sellerName!}",
-                        style: const TextStyle(
-                            fontSize: 14.0),
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      color: Colors.white,
-                      padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        "库存：" + result.stock!.toString(),
-                        style: const TextStyle(
-                            fontSize: 14.0),
-                      ),
-                    ),
-                    // 白条支付
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          border: Border(
-                            top: BorderSide(width: 1, color: Color(0xFFE8E8ED)),
-                            bottom:
-                                BorderSide(width: 1, color: Color(0xFFE8E8ED)),
-                          )),
-                      child: InkWell(
-                        child: Row(
-                          children: [
-                            const Text(
-                              "支付方式",
-                              style: TextStyle(color: Color(0xff999999)),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: Text("钱包"),
-                              ),
-                            ),
-                            const Icon(Icons.more_horiz_outlined)
-                          ],
-                        ),
-                        onTap: () {
-                          // 选择支付方式
-                        },
-                      ),
-                    ),
-                    // 商品件数
+
                     Container(
                         padding: EdgeInsets.all(10.0),
                         decoration: const BoxDecoration(
@@ -162,7 +100,7 @@ class _DetailPageState extends State<DetailPage> {
                         child: Row(
                           children: [
                             const Text(
-                              "已选择",
+                              "拼团数量设置：",
                               style: TextStyle(color: Color(0xff999999)),
                             ),
                             Expanded(
@@ -171,16 +109,13 @@ class _DetailPageState extends State<DetailPage> {
                                 child: Text(itemNum.toString() + "件"),
                               ),
                             ),
+
                             InkWell(
                               child: Row(
                                 children: [const Icon(Icons.add)],
                               ),
                               onTap: () {
                                 this.setState(() {
-                                  if (itemNum >= result.stock!) {
-                                    itemNum = result.stock!;
-                                    return;
-                                  }
                                   itemNum++;
                                 }); // 选择商品个数
                               },
@@ -200,6 +135,72 @@ class _DetailPageState extends State<DetailPage> {
                                   itemNum--;
                                 }); // 选择商品个数
                               },
+                            ),
+                          ],
+                        )),
+
+                    // 商品件数
+                    Container(
+                        padding: EdgeInsets.all(10.0),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              top: BorderSide(
+                                  width: 1, color: Color(0xFFE8E8ED)),
+                              bottom: BorderSide(
+                                  width: 1, color: Color(0xFFE8E8ED)),
+                            )),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "商品单价设置：",
+                              style: TextStyle(color: Color(0xff999999)),
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                maxLines: 1,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  hintText: '请输入价格',
+                                  border: InputBorder.none,
+                                ),
+                                controller: price,
+                              ),
+                            ),
+                          ],
+                        )),
+                    // 商品件数
+                    Container(
+                        padding: EdgeInsets.all(10.0),
+                        decoration: const BoxDecoration(
+                            color: Colors.white,
+                            border: Border(
+                              top: BorderSide(
+                                  width: 1, color: Color(0xFFE8E8ED)),
+                              bottom: BorderSide(
+                                  width: 1, color: Color(0xFFE8E8ED)),
+                            )),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "商品描述设置：",
+                              style: TextStyle(color: Color(0xff999999)),
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Expanded(
+                              child: TextField(
+                                maxLines: 1,
+                                decoration: const InputDecoration(
+                                  hintText: '请输入描述',
+                                  border: InputBorder.none,
+                                ),
+                                controller: desc,
+                              ),
                             ),
                           ],
                         )),
@@ -225,50 +226,11 @@ class _DetailPageState extends State<DetailPage> {
                           child: InkWell(
                             child: Container(
                               height: 60,
-                              color: Colors.white,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.shopping_cart),
-                                  Text(
-                                    "购物车",
-                                    style: TextStyle(fontSize: 13.0),
-                                  )
-                                ],
-                              ),
-                            ),
-                            onTap: () {
-                              print("goto cart");
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChangeNotifierProvider<
-                                              BottomNaviProvider>(
-                                            create: (context) {
-                                              BottomNaviProvider provider =
-                                                  BottomNaviProvider();
-                                              provider.changeBottomNaviIndex(1);
-                                              return provider;
-                                            },
-                                            child: Consumer<BottomNaviProvider>(
-                                                builder: (_, provider, __) {
-                                              return Container(
-                                                  child: IndexPage(userType: 1,));
-                                            }),
-                                          )),
-                                  (route) => false);
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: InkWell(
-                            child: Container(
-                              height: 60,
                               color: Colors.red,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
-                                  Text("加入购物车",
+                                  Text("开团  ",
                                       style: TextStyle(
                                           fontSize: 15.0,
                                           color: Colors.white,
@@ -277,20 +239,24 @@ class _DetailPageState extends State<DetailPage> {
                               ),
                             ),
                             onTap: () {
-                              //购物车
-                              NetRequest()
-                                  .request(MyApi.PLACE_ORDER, params: {"itemId": result.id, "num": itemNum})
-                                  .then((response) {
-                                    if (response.success) {
-                                      showAlertDialog(
-                                          context, "购物车", "添加成功，请在购物车中查看~");
-                                    } else {
-                                      showAlertDialog(context, "购物车", response.message);
 
-                                    }
+                              Map<String, dynamic> request = {
+                                "goodsId": widget.id,
+                                "num": itemNum,
+                                "price": price.text,
+                                "desc": desc.text
+                              };
+                              NetRequest()
+                                  .request(MyApi.CREATE_SHOP, data: request, method: "post")
+                                  .then((response) {
+                                if (response.code == 200) {
+                                  showAlertDialog(context, "开团成功", "");
+                                } else {
+                                  showAlertDialog(context, "开团失败", "");
+                                }
                               }).catchError((error) {
                                 print(error);
-                                showAlertDialog(context, "购物车", "添加失败，请重试~");
+                                showAlertDialog(context, "开团失败", "");
                               });
                             },
                           ),

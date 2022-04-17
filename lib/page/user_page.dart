@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopapp/config/api.dart';
 import 'package:shopapp/model/user_info_response.dart';
+import 'package:shopapp/page/history_order_page.dart';
 import 'package:shopapp/page/register_page.dart';
 import 'package:shopapp/page/wallet_page.dart';
 import 'package:shopapp/provider/provider.dart';
@@ -62,6 +63,7 @@ class _UserPageState extends State<UserPage> {
                     ),
                     // info(context),
                     wallet(context),
+                    historyOrder(context),
                     // seller(context),
                     version(context),
                     forOur(context),
@@ -198,13 +200,13 @@ Widget wallet(BuildContext context) {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                ChangeNotifierProvider<OrderProvider>(
+                ChangeNotifierProvider<UserInfoProvider>(
                   create: (context) {
-                    OrderProvider provider =
-                    OrderProvider();
+                    UserInfoProvider provider =
+                    UserInfoProvider();
                     return provider;
                   },
-                  child: Consumer<OrderProvider>(
+                  child: Consumer<UserInfoProvider>(
                       builder: (_, provider, __) {
                         return Container(
                             child: WalletPage()
@@ -216,6 +218,48 @@ Widget wallet(BuildContext context) {
   );
 }
 
+Widget historyOrder(BuildContext context) {
+  return Container(
+      child: InkWell(
+        child: Card(
+          color: Colors.white70,
+          margin: EdgeInsets.all(10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              SizedBox(
+                width: 20,
+                height: 40,
+              ),
+              Text(
+                "历史订单",
+                style: TextStyle(fontSize: 20),
+              ),
+              Spacer(),
+              Icon(Icons.keyboard_arrow_right)
+            ],
+          ),
+        ),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  ChangeNotifierProvider<OrderProvider>(
+                    create: (context) {
+                      OrderProvider provider =
+                      OrderProvider();
+                      return provider;
+                    },
+                    child: Consumer<OrderProvider>(
+                        builder: (_, provider, __) {
+                          return Container(
+                              child: HistoryOrderPage()
+                          );
+                        }),
+                  )));
+        },
+      )
+  );
+}
 Widget seller(BuildContext context) {
   return Container(
       child: InkWell(

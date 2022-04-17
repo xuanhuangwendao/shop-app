@@ -142,6 +142,8 @@ class _LoginPageState extends State<LoginPage> {
                           LoginResponse model = LoginResponse.fromJson(response.model);
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.setString('token', model.token!);
+                          await prefs.setString('userType', "1");
+
 
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
@@ -155,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                                         },
                                         child: Consumer<BottomNaviProvider>(
                                             builder: (_, provider, __) {
-                                              return Container(child: IndexPage());
+                                              return Container(child: IndexPage(userType: 1,));
                                             }),
                                       )),
                                   (route) => false);
@@ -205,6 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                           LoginResponse model = LoginResponse.fromJson(response.model);
                           final prefs = await SharedPreferences.getInstance();
                           await prefs.setString('token', model.token!);
+                          await prefs.setString('userType', "2");
 
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
@@ -218,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                                         },
                                         child: Consumer<BottomNaviProvider>(
                                             builder: (_, provider, __) {
-                                              return Container(child: IndexPage());
+                                              return Container(child: IndexPage(userType: 2,));
                                             }),
                                       )),
                                   (route) => false);
