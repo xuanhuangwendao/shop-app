@@ -20,6 +20,10 @@ class _RegisterPageState extends State<RegisterPage> {
   var nickName;
   var address;
   var sign;
+  List<String> _radioList = [];
+  String _radioCheck = '普通用户';
+  int userType = 1;
+
 
   @override
   void initState() {
@@ -36,6 +40,8 @@ class _RegisterPageState extends State<RegisterPage> {
     address.addListener(() {});
     sign = TextEditingController();
     sign.addListener(() {});
+    _radioList.add("普通用户");
+    _radioList.add("团长");
 
   }
 
@@ -177,6 +183,30 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
             ),
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: _radioList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(_radioList[index]),
+                  leading: Radio(
+                    value: _radioList[index],
+                    groupValue: _radioCheck,
+                    onChanged: (String? value) {
+                      setState(() {
+                        _radioCheck = value!;
+                      });
+                      userType = index + 1;
+                      },
+                  ),
+                  onTap:(){
+                    setState(() {
+                      _radioCheck = _radioList[index];
+                      userType = index + 1;
+                    });
+                  },
+                );
+              }),
             const SizedBox(
               height: 30,
             ),
@@ -204,7 +234,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       "password": password.text,
                       "nickname": nickName.text,
                       "address": address.text,
-                      "sign": sign.text
+                      "sign": sign.text,
+                      "userType": userType.toString()
                     };
                     NetRequest()
                         .request(MyApi.REGISTER, data: data, method: "post")

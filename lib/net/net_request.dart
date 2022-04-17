@@ -36,7 +36,6 @@ class NetRequest {
       final prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
       dio.options.headers['token'] = token;
-      dio.options.contentType =  Headers.formUrlEncodedContentType;
       final response = method == "get"
           ? await dio.get(path, queryParameters: params)
           : await dio.post(path, data: data);
