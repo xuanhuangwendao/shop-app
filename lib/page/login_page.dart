@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         alignment: Alignment.center,
                         child: const Text(
-                          '登录',
+                          '用户登录',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               letterSpacing: 20,
@@ -132,7 +132,71 @@ class _LoginPageState extends State<LoginPage> {
 
                       Map<String, dynamic> params = {
                         "username": username.text,
-                        "password": password.text
+                        "password": password.text,
+                        "userType": 1
+                      };
+                      NetRequest()
+                          .request(MyApi.LOGIN, params: params)
+                          .then((response) async {
+                        if (response.code == 200) {
+                          LoginResponse model = LoginResponse.fromJson(response.model);
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setString('token', model.token!);
+
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChangeNotifierProvider<BottomNaviProvider>(
+                                        create: (context) {
+                                          BottomNaviProvider provider =
+                                          BottomNaviProvider();
+                                          provider.changeBottomNaviIndex(0);
+                                          return provider;
+                                        },
+                                        child: Consumer<BottomNaviProvider>(
+                                            builder: (_, provider, __) {
+                                              return Container(child: IndexPage());
+                                            }),
+                                      )),
+                                  (route) => false);
+                        } else {
+                          showAlertDialog(context, "登录失败", "");
+                        }
+                      }).catchError((error) {
+                        print(error);
+                        showAlertDialog(context, "", "error");
+                      });
+                    },
+                  )),
+              const SizedBox(
+                height: 10,
+              ),
+
+              SizedBox(
+                  child: InkWell(
+                    child: Container(
+                        padding: EdgeInsets.fromLTRB(2, 15, 2, 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.deepOrangeAccent,
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          '团长登录',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              letterSpacing: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white70),
+                        )),
+                    onTap: () {
+                      print(username.text);
+                      print(password.text);
+
+                      Map<String, dynamic> params = {
+                        "username": username.text,
+                        "password": password.text,
+                        "userType": 2
                       };
                       NetRequest()
                           .request(MyApi.LOGIN, params: params)

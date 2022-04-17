@@ -62,7 +62,9 @@ class _UserPageState extends State<UserPage> {
                     ),
                     // info(context),
                     wallet(context),
-                    seller(context),
+                    // seller(context),
+                    version(context),
+                    forOur(context),
                     logout(context)
 
                   ],
@@ -272,6 +274,64 @@ Widget logout(BuildContext context) {
                   return  LoginPage();
                 },
               ));
+        },
+      )
+  );
+}
+
+Widget version(BuildContext context) {
+  return Container(
+      child: InkWell(
+        child: Card(
+          color: Colors.white70,
+          margin: EdgeInsets.all(10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              SizedBox(
+                width: 20,
+                height: 40,
+              ),
+              Text(
+                "版本",
+                style: TextStyle(fontSize: 20),
+              ),
+              Spacer(),
+              Icon(Icons.keyboard_arrow_right)
+            ],
+          ),
+        ),
+        onTap: () {
+          // todo 修改信息
+        },
+      )
+  );
+}
+
+Widget forOur(BuildContext context) {
+  return Container(
+      child: InkWell(
+        child: Card(
+          color: Colors.white70,
+          margin: EdgeInsets.all(10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              SizedBox(
+                width: 20,
+                height: 40,
+              ),
+              Text(
+                "关于我们",
+                style: TextStyle(fontSize: 20),
+              ),
+              Spacer(),
+              Icon(Icons.keyboard_arrow_right)
+            ],
+          ),
+        ),
+        onTap: () {
+          // todo 修改信息
         },
       )
   );
