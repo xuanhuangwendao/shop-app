@@ -1,7 +1,7 @@
 class MyApi {
-
-  static const String LOCAL_URL = "http://123.60.77.134:7002";
-
+  //
+  // static const String LOCAL_URL = "http://123.60.77.134:7002";
+  static const String LOCAL_URL = "http://192.168.31.42:7002";
   // 登录
   static const String LOGIN = LOCAL_URL + "/user/login";
 
