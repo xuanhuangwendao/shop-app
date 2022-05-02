@@ -5,6 +5,7 @@ import 'package:shopapp/config/api.dart';
 import 'package:shopapp/net/net_request.dart';
 import 'package:shopapp/page/login_page.dart';
 import 'package:shopapp/util/alert_dialog.dart';
+import 'package:shopapp/util/file.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -42,6 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
     sign.addListener(() {});
     _radioList.add("普通用户");
     _radioList.add("团长");
+    _radioList.add("供应商");
 
   }
 
@@ -54,6 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Container(
         child: SingleChildScrollView(
           child: Column(children: [
+
             const SizedBox(
               height: 40,
             ),

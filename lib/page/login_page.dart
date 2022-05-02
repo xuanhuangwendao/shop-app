@@ -154,8 +154,8 @@ class _LoginPageState extends State<LoginPage> {
                       '登录',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          letterSpacing: 20,
                           fontWeight: FontWeight.bold,
+                          fontSize: 22,
                           color: Colors.white70),
                     )),
                 onTap: () {
