@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopapp/page/cart_page.dart';
 import 'package:shopapp/page/home_page.dart';
 import 'package:shopapp/page/seller_home_page.dart';
+import 'package:shopapp/page/supplier_page.dart';
 import 'package:shopapp/page/user_page.dart';
 import 'package:shopapp/provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class IndexPage extends StatefulWidget {
 class _IndexPageState extends State<IndexPage> {
   @override
   Widget build(BuildContext context) {
+    print("userType:" + widget.userType.toString());
     if (widget.userType == 1) {
       return Scaffold(
           bottomNavigationBar: Consumer<BottomNaviProvider>(
@@ -86,6 +88,37 @@ class _IndexPageState extends State<IndexPage> {
                       UserPage(),
                     ],
                   )));
+    } else if (widget.userType == 3) {
+      return Scaffold(
+          bottomNavigationBar: Consumer<BottomNaviProvider>(
+            builder: (_, mProvider, __) => BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: mProvider.bottomNaviIndex,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "供给",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: "我的",
+                ),
+              ],
+              onTap: (index) {
+                setState(() {
+                  mProvider.changeBottomNaviIndex(index);
+                });
+              },
+            ),
+          ),
+          body: Consumer<BottomNaviProvider>(
+              builder: (context, mProvider, __) => IndexedStack(
+                index: mProvider.bottomNaviIndex,
+                children: const [
+                  SupplierPage(),
+                  UserPage(),
+                ],
+              )));
     } else {
       return Scaffold(
           bottomNavigationBar: Consumer<BottomNaviProvider>(

@@ -43,6 +43,9 @@ class MyApi {
   // 修改头像
   static const String UP_LOAD = LOCAL_URL + "/user/changeUserPic";
 
+  // 上传图片
+  static const String SAVE_PIC = LOCAL_URL + "/file/save";
+
   // 读取图片
   static const String READ_IMG = LOCAL_URL + "/file/img";
 

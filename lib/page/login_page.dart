@@ -55,8 +55,8 @@ class _LoginPageState extends State<LoginPage> {
                   children: const <Widget>[
                     Image(
                       image: AssetImage("assets/image/logo.jpg"),
-                      height: 200,
-                      width: 200,
+                      height: 150,
+                      width: 150,
                     )
                   ]),
               // Row(
@@ -138,9 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     );
                   }),
-              const SizedBox(
-                height: 30,
-              ),
+
               SizedBox(
                   child: InkWell(
                 child: Container(
@@ -206,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
               )),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               SizedBox(
                   child: InkWell(
@@ -221,8 +219,8 @@ class _LoginPageState extends State<LoginPage> {
                       '注册',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          letterSpacing: 20,
                           fontWeight: FontWeight.bold,
+                          fontSize: 22,
                           color: Colors.white70),
                     )),
                 onTap: () {

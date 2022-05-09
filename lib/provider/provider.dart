@@ -198,7 +198,7 @@ class UserInfoProvider extends ChangeNotifier {
     isLoading = true;
     isError = false;
     errorMsg = "";
-
+    print("loadUserInfooooo");
     NetRequest().request(MyApi.USER_INFO).then((response) {
       isLoading = false;
       result = UserInfoResponse.fromJson(response.model);

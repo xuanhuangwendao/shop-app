@@ -65,7 +65,7 @@ class _UserPageState extends State<UserPage> {
                     wallet(context),
                     historyOrder(context),
                     // seller(context),
-                    version(context),
+                    version(context, provider),
                     forOur(context),
                     logout(context)
 
@@ -102,9 +102,8 @@ Widget getUserHeader(UserInfoResponse userInfo, UserInfoProvider provider) {
 
                 ),
                 onTap: () {
-                  uploadHeader("1");
+                  uploadHeader("1").then((value) => provider.loadUserInfo() );
                   print("更换头像");
-                  provider.loadUserInfo();
                 },
               ),
               const SizedBox(
@@ -323,7 +322,7 @@ Widget logout(BuildContext context) {
   );
 }
 
-Widget version(BuildContext context) {
+Widget version(BuildContext context, UserInfoProvider provider) {
   return Container(
       child: InkWell(
         child: Card(
@@ -346,6 +345,7 @@ Widget version(BuildContext context) {
           ),
         ),
         onTap: () {
+          provider.loadUserInfo();
           // todo 修改信息
         },
       )
